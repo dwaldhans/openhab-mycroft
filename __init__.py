@@ -128,7 +128,8 @@ class openHABSkill(MycroftSkill):
 		else:			
 			requestUrl = self.url+"/items?recursive=false"
 
-			try: 
+			try:
+				LOGGER.debug("Requesting items from %s" % requestUrl)
 				req = requests.get(requestUrl, headers=self.polling_headers)
 				if req.status_code == 200:
 					json_response = req.json()
