@@ -150,13 +150,13 @@ class openHABSkill(MycroftSkill):
 						else:
 							pass
 				else:
-					LOGGER.error("Some issues with the command execution!")
+					LOGGER.error("Some issues with the command execution! Request returned status code %s" % req.status_code)
 					self.speak_dialog('GetItemsListError')
 
 			except KeyError:
 						pass
-			except Exception:
-					LOGGER.error("Some issues with the command execution!")
+			except Exception as e:
+					LOGGER.error("Some issues with the command execution! Exception message was: %s" % str(e))
 					self.speak_dialog('GetItemsListError')
 
 	def findItemName(self, itemDictionary, messageItem):
