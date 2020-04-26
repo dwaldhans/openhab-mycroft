@@ -104,8 +104,14 @@ class openHABSkill(MycroftSkill):
 		return (self.settings.get(key) or self.config_core.get('openHABSkill', {}).get(key))
 
 	def handle_websettings_update(self):
-		if self.get_config('host') is not None and self.get_config('port') is not None:
-			self.url = "http://%s:%s/rest" % (self.get_config('host'), self.get_config('port'))
+		host = self.get_config('host')
+		port = self.get_config('port')
+
+		LOGGER.debug("Got host %s and port %s from config." % (host, port))
+
+		if host is not None and port is not None:
+			self.url = "http://%s:%s/rest" % (host, port)
+			LOGGER.debug("Full URL is %s" % self.url)
 			self.getTaggedItems()
 		else:
 		    self.url = None
