@@ -166,22 +166,27 @@ class openHABSkill(MycroftSkill):
 					LOGGER.error("Some issues with the command execution! Exception message was: %s" % str(e))
 					self.speak_dialog('GetItemsListError')
 
-	def findItemName(self, itemDictionary, messageItem):
+    def findItemName(self, itemDictionary, messageItem):
+        LOGGER.debug("Finding item best matching '%s'" % messageItem)
+        LOGGER.debug("Candidates are: %s" % itemDictionary.values())
 
-		bestScore = 0
-		score = 0
-		bestItem = None
+        bestScore = 0
+        score = 0
+        bestItem = None
 
-		try:
-			for itemName, itemLabel in list(itemDictionary.items()):
-				score = fuzz.ratio(messageItem, itemLabel)
-				if score > bestScore:
-					bestScore = score
-					bestItem = itemName
-		except KeyError:
-                    pass
+        try:
+            for itemName, itemLabel in list(itemDictionary.items()):
+                score = fuzz.ratio(messageItem, itemLabel)
+                LOGGER.debug("Score for match between '%s' and '%s' is %s" %(messageItem, itemLabel, score))
+                if score > bestScore:
+                    bestScore = score
+                    bestItem = itemName
+        except KeyError:
+            pass
 
-		return bestItem
+        LOGGER.debug("Best matching item with a score of %s is '%s'" % (bestScore, bestItem))
+
+        return bestItem
 
 
 	def getItemsFromDict(self, typeStr, itemsDict):
