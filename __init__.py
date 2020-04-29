@@ -226,6 +226,8 @@ class openHABSkill(MycroftSkill):
         command = message.data.get('Command')
         messageItem = message.data.get('Item')
 
+        LOGGER.debug("Handling on/off status intent with item '%s' and command '%s'" % (messageItem, command))
+
         # We have to find the item to update from our dictionaries
         self.lightingSwitchableItemsDic = dict()
         self.lightingSwitchableItemsDic.update(self.lightingItemsDic)
