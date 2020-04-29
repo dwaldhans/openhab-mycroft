@@ -236,15 +236,24 @@ class openHABSkill(MycroftSkill):
         ohItem = self.findItemName(self.lightingSwitchableItemsDic, messageItem)
 
         if ohItem != None:
-            statusCode = self.sendCommandToItem(ohItem, command.upper())
-            if statusCode == 200:
-                self.speak_dialog('StatusOnOff', {'command': command, 'item': messageItem})
-            elif statusCode == 404:
-                LOGGER.error("Some issues with the command execution!. Item not found")
-                self.speak_dialog('ItemNotFoundError')
+            command_to_send = None
+            if self.voc_match(command, 'On'):
+                command_to_send = 'on'
+            elif self.voc_match(command, 'Off'):
+                command_to_send = 'off'
+
+            if command_to_send:
+                statusCode = self.sendCommandToItem(ohItem, command_to_send.upper())
+                if statusCode == 200:
+                    self.speak_dialog('StatusOnOff', {'command': command, 'item': messageItem})
+                elif statusCode == 404:
+                    LOGGER.error("Some issues with the command execution!. Item not found")
+                    self.speak_dialog('ItemNotFoundError')
+                else:
+                    LOGGER.error("Some issues with the command execution!")
+                    self.speak_dialog('CommunicationError')
             else:
-                LOGGER.error("Some issues with the command execution!")
-                self.speak_dialog('CommunicationError')
+                self.speak_dialog('ErrorDialog')
         else:
             LOGGER.error("Item not found!")
             self.speak_dialog('ItemNotFoundError')
